@@ -1,0 +1,48 @@
+Login -
+ 1st page enter your phone number and continue
+ or signup with google 
+ 2nd page appears to verify otp and verify
+ 
+ Then after login select your profile
+ i am a user
+ i am a expert/investor
+ 
+ Then after setup profile 
+ User profile
+  - Full Name
+  - phone number
+  - email address
+  - Skills & Expertise Area
+  - ADDRESS [City,State,Country]
+  - type dropdown-  startup-founder, freelancer
+  - if start-up founder then down options will open that would include
+             - Business Name
+             - Website URL 
+             - Business Category 
+             - Certificate Upload 
+  - if freelancer then down options will not open       
+  - then a checkbox for remember my settings option
+  - then click on submit 
+  
+  Expert profile
+  - name
+  - phone number
+  - email address
+  - password 
+  - ADDRESS [City,State,Country]
+  - Skills & Expertise Area
+  - type - investors,experts, mentor
+  - then a checkbox for remember my settings option
+  - then click on next 
+
+then next page appears for details that include 
+  - Company Name 
+  - Website URL 
+  - Registered Office Address 
+  - GSTIN Number 
+  - option to upload Company Registration Certificate using cloudinary 
+  - Industry Category 
+  - then click on submit 
+
+
+  
