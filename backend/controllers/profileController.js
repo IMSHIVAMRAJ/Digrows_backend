@@ -41,16 +41,17 @@ exports.setupExpertProfile = async (req, res) => {
       name, phone, email, password, city, state, country,
       skills, type, rememberSettings,
       companyName, website, officeAddress, gstin, industryCategory,
+      chatFee, chatDurationMinutes,
     } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
     const registrationCertUrl = req.file?.path;
 
     const expert = new Expert({
       name,
       phone,
       email,
-      password: hashedPassword,
+      // password: hashedPassword,
       skills,
       type,
       address: { city, state, country },
@@ -61,6 +62,8 @@ exports.setupExpertProfile = async (req, res) => {
       registrationCertUrl,
       industryCategory,
       rememberSettings,
+      chatFee,
+      chatDurationMinutes,
     });
 
     await expert.save();

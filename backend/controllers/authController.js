@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken'); // ✅ Don't forget this!
 const twilio = require('twilio');
 const { OAuth2Client } = require('google-auth-library');
 const User = require('../models/User');
@@ -30,11 +31,31 @@ exports.verifyOTP = async (req, res) => {
 
     if (verification.status === 'approved') {
       let user = await User.findOne({ phone });
-      if (!user) user = await new User({ phone }).save();
 
-      res.status(200).json({ message: 'OTP verified', user });
+      if (user) {
+        // ✅ Existing user → login
+        const token = jwt.sign(
+          { id: user._id, role: user.role },
+          process.env.JWT_SECRET,
+          { expiresIn: '1d' }
+        );
+
+        return res.status(200).json({
+          message: 'Login successful',
+          token,
+          role: user.role,
+          user
+        });
+      } else {
+        // 🆕 New user → continue to registration
+        return res.status(200).json({
+          message: 'OTP verified. Please complete registration.',
+          verified: true,
+          phone
+        });
+      }
     } else {
-      res.status(400).json({ message: 'Invalid OTP' });
+      return res.status(400).json({ message: 'Invalid OTP' });
     }
   } catch (err) {
     console.error(err);
@@ -51,9 +72,8 @@ exports.googleSignIn = async (req, res) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
-    const { email, name, sub } = ticket.getPayload();
+    const { email, name } = ticket.getPayload();
 
-    // Find or create user
     let user = await User.findOne({ email });
     if (!user) user = await new User({ email, name }).save();
 

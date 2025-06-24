@@ -17,6 +17,12 @@ const UserSchema = new mongoose.Schema({
   certificateUrl: String,
   rememberSettings: Boolean,
 
+  role: {
+    type: String,
+    enum: ['user', 'expert'], 
+    default: 'user'
+  },
+
   
 team: [
   {
