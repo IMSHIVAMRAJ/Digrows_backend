@@ -23,7 +23,7 @@ Login -
   - if freelancer then down options will not open       
   - then a checkbox for remember my settings option
   - then click on submit 
-  
+ 
   Expert profile
   - name
   - phone number
@@ -43,6 +43,14 @@ then next page appears for details that include
   - option to upload Company Registration Certificate using cloudinary 
   - Industry Category 
   - then click on submit 
+
+
+
+
+
+
+
+
 
 
   

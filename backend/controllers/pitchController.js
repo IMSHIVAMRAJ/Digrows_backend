@@ -1,6 +1,7 @@
 const Pitch = require('../models/Pitch');
 const User = require('../models/User');
 const Appointment = require('../models/Appointment');
+const Investor = require("../models/Expert");
 const fs = require('fs');
 
 // ✅ Pitch Submission by Startup
@@ -50,16 +51,27 @@ exports.bookAppointment = async (req, res) => {
   const { investorId, dateTime } = req.body;
 
   try {
+    // 🔍 1. Check if investor exists
+    const investor = await Investor.findById(investorId);
+    if (!investor) {
+      return res.status(404).json({
+        success: false,
+        message: "Investor not found"
+      });
+    }
+
+    // ✅ 2. Create appointment
     const appointment = await Appointment.create({
       startupId: req.user.id,
       investorId,
       dateTime,
-      status: 'pending'
+      status: "scheduled"
     });
 
     res.status(201).json({ success: true, appointment });
+
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Booking failed', err });
+    res.status(500).json({ success: false, message: "Booking failed", err });
   }
 };
 

@@ -1,35 +1,136 @@
-const jwt = require('jsonwebtoken'); // ✅ Don't forget this!
-const twilio = require('twilio');
-const { OAuth2Client } = require('google-auth-library');
-const User = require('../models/User');
+// const jwt = require("jsonwebtoken");
+// const axios = require("axios");
+// const { OAuth2Client } = require("google-auth-library");
+// const User = require("../models/User");
+// const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+// exports.sendOTP = async (req, res) => {
+//   const { phone } = req.body;
+
+//   // Simple 6-digit OTP
+//   const otp = Math.floor(100000 + Math.random() * 900000);
+
+//   try {
+//     // Store OTP temporarily (for demo: in-memory)
+//     global.otpStore = global.otpStore || {};
+//     global.otpStore[phone] = otp;
+
+//     // Send OTP via Fast2SMS
+//     const response = await axios.post(
+//       "https://www.fast2sms.com/dev/bulkV2",
+//       {
+//         variables_values: otp,
+//         route: "otp",
+//         numbers: phone,
+//       },
+//       {
+//         headers: {
+//           Authorization: process.env.FAST2SMS_API_KEY,
+//         },
+//       }
+//     );
+
+//     return res.status(200).json({ message: "OTP sent successfully" });
+//   } catch (err) {
+//     console.error("Fast2SMS Error:", err?.response?.data || err.message);
+//     return res.status(500).json({ message: "Failed to send OTP" });
+//   }
+// };
+
+// exports.verifyOTP = async (req, res) => {
+//   const { phone, otp } = req.body;
+
+//   try {
+//     const storedOTP = global.otpStore?.[phone];
+
+//     if (storedOTP && storedOTP == otp) {
+//       delete global.otpStore[phone]; // OTP use ho gaya, hata do
+
+//       let user = await User.findOne({ phone });
+
+//       if (user) {
+//         const token = jwt.sign(
+//           { id: user._id, role: user.role },
+//           process.env.JWT_SECRET,
+//           { expiresIn: "1d" }
+//         );
+
+//         return res.status(200).json({
+//           message: "Login successful",
+//           token,
+//           role: user.role,
+//           user,
+//         });
+//       } else {
+//         return res.status(200).json({
+//           message: "OTP verified. Please complete registration.",
+//           verified: true,
+//           phone,
+//         });
+//       }
+//     } else {
+//       return res.status(400).json({ message: "Invalid OTP" });
+//     }
+//   } catch (err) {
+//     console.error("OTP Verify Error:", err.message);
+//     return res.status(500).json({ message: "OTP verification failed" });
+//   }
+// };
+
+
+// exports.googleSignIn = async (req, res) => {
+//   const { token } = req.body;
+
+//   try {
+//     const ticket = await client.verifyIdToken({
+//       idToken: token,
+//       audience: process.env.GOOGLE_CLIENT_ID,
+//     });
+
+//     const { email, name } = ticket.getPayload();
+
+//     let user = await User.findOne({ email });
+//     if (!user) user = await new User({ email, name }).save();
+
+//     res.status(200).json({ message: "Google login success", user });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(401).json({ message: "Invalid Google token" });
+//   }
+// };
+
+const jwt = require("jsonwebtoken"); // ✅ Don't forget this!
+const twilio = require("twilio");
+const { OAuth2Client } = require("google-auth-library");
+const User = require("../models/User");
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+const twilioClient = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 exports.sendOTP = async (req, res) => {
   const { phone } = req.body;
-
   try {
     await twilioClient.verify.v2
       .services(process.env.TWILIO_SERVICE_SID)
-      .verifications.create({ to: `+91${phone}`, channel: 'sms' });
+      .verifications.create({ to: `+91${phone}`, channel: "sms" });
 
-    res.status(200).json({ message: 'OTP sent' });
+    res.status(200).json({ message: "OTP sent" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'OTP send failed' });
+    res.status(500).json({ message: "OTP send failed" });
   }
 };
-
 exports.verifyOTP = async (req, res) => {
   const { phone, otp } = req.body;
-
   try {
     const verification = await twilioClient.verify.v2
       .services(process.env.TWILIO_SERVICE_SID)
       .verificationChecks.create({ to: `+91${phone}`, code: otp });
 
-    if (verification.status === 'approved') {
+    if (verification.status === "approved") {
       let user = await User.findOne({ phone });
 
       if (user) {
@@ -37,29 +138,29 @@ exports.verifyOTP = async (req, res) => {
         const token = jwt.sign(
           { id: user._id, role: user.role },
           process.env.JWT_SECRET,
-          { expiresIn: '1d' }
+          { expiresIn: "1d" }
         );
 
         return res.status(200).json({
-          message: 'Login successful',
+          message: "Login successful",
           token,
           role: user.role,
-          user
+          user,
         });
       } else {
         // 🆕 New user → continue to registration
         return res.status(200).json({
-          message: 'OTP verified. Please complete registration.',
+          message: "OTP verified. Please complete registration.",
           verified: true,
-          phone
+          phone,
         });
       }
     } else {
-      return res.status(400).json({ message: 'Invalid OTP' });
+      return res.status(400).json({ message: "Invalid OTP" });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'OTP verification failed' });
+    res.status(500).json({ message: "OTP verification failed" });
   }
 };
 
@@ -77,9 +178,9 @@ exports.googleSignIn = async (req, res) => {
     let user = await User.findOne({ email });
     if (!user) user = await new User({ email, name }).save();
 
-    res.status(200).json({ message: 'Google login success', user });
+    res.status(200).json({ message: "Google login success", user });
   } catch (err) {
     console.error(err);
-    res.status(401).json({ message: 'Invalid Google token' });
+    res.status(401).json({ message: "Invalid Google token" });
   }
 };

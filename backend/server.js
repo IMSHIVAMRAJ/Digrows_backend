@@ -16,7 +16,11 @@ const User = require("./models/User");
 const expertRoutes = require("./routes/expert");
 const messageRoutes = require("./routes/messages");
 const pitchRoutes = require('./routes/pitch');
-const appointmentRoutes = require('./routes/appointment')
+const appointmentRoutes = require('./routes/appointment');
+const userRoutes = require("./routes/userRoutes");
+const groupRoutes = require("./routes/groupRoutes");
+const searchRoutes = require("./routes/search");
+const adminRoutes = require("./routes/admin");
 // Connect to DB
 dotenv.config();
 connectDB();
@@ -37,15 +41,19 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/team", teamRoutes);
 app.use("/api/wallet", walletRoutes);
-app.use("/api/chat", chatRoutes); // ✅ Mount chat API
+app.use("/api/chat", chatRoutes); 
 app.use("/api/payment", paymentRoutes);
 app.use("/api/expert", expertRoutes);
-
 app.use("/api/messages", messageRoutes);
-const adminRoutes = require("./routes/admin");
 app.use("/api/admin", adminRoutes);
 app.use('/api/pitch', pitchRoutes);
 app.use('/api/appointment', appointmentRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/teams", teamRoutes);
+app.use("/api/groups", groupRoutes);
+app.use("/api/search", searchRoutes);
+
+
 // ✅ Real-time Messaging Logic
 io.on("connection", (socket) => {
   console.log("🟢 User connected to socket");

@@ -1,5 +1,4 @@
 const Message = require('../models/Message');
-// const ChatAccess = require('../models/ChatAccess');
 const ChatSession = require('../models/ChatSession');
 const User = require('../models/User');
 
@@ -12,21 +11,20 @@ exports.sendMessage = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Receiver not found' });
     }
 
-    const isExpert = receiver.role === 'expert';
+    // ✅ Check if there is a valid ChatSession
+    const session = await ChatSession.findOne({
+      $or: [
+        { user: senderId, expert: receiverId },
+        { user: receiverId, expert: senderId }, // in case expert is sending back
+      ],
+      expiresAt: { $gt: new Date() }
+    });
 
-    if (isExpert) {
-      const access = await ChatAccess.findOne({
-        userId: senderId,
-        expertId: receiverId,
-        expiresAt: { $gt: new Date() } // 👈 valid access check
+    if (!session) {
+      return res.status(403).json({
+        success: false,
+        message: 'No active chat session. Please start a session first.',
       });
-
-      if (!access) {
-        return res.status(403).json({
-          success: false,
-          message: 'Chat access expired or not available. Please purchase to chat with expert.',
-        });
-      }
     }
 
     // ✅ Save the message
@@ -40,7 +38,7 @@ exports.sendMessage = async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err);
+    console.error("Send message error:", err);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 };
