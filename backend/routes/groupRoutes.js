@@ -5,4 +5,5 @@ const groupController = require("../controllers/groupController");
 router.post("/create", groupController.createGroup);
 router.get("/my-groups/:userId", groupController.getUserGroups);
 
+
 module.exports = router;

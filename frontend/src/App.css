@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #f95e01;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e54d00;
+}
+
+/* Table hover effects */
+.table-row-hover:hover {
+  background-color: #f9fafb;
+}
+
+/* Custom focus styles */
+.focus-ring:focus {
+  outline: 2px solid #f95e01;
+  outline-offset: 2px;
+}

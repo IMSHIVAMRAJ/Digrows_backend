@@ -45,12 +45,34 @@ then next page appears for details that include
   - then click on submit 
 
 
+Admin-
+get total number of users
+get total number of freelancer
+get total number of entrepreneurs
+get total number of expert
+get total number of mentors
+get total number of investors
+get total number of Expert Categories
+get total number of Mentor Categories
 
+list of Freelancers
+Name,Number,Email
 
+get list of Entrepreneurs
+Name,Number,Email,Business,Name,Link,Category
 
+Experts , mentor, investor
+Name,Number,Email,Address,Skills & Exp,	Company,	Link,	Office, Address,	GSTIN	,Category
 
+all should have option to delete them too
 
+add expert Category
+get expert category , expert count of that category, and option to edit and delete
+add mentor Category
+get mentor category , mentor count of that category, and option to edit and delete
 
+Recent Transactions
+Transaction ID,	User,	Amount,	Status,	Date,	Payment, Method,	Description
 
-
+Total Revenue,Pending Payments,Failed Transactions,Monthly Growth
   
