@@ -5,24 +5,42 @@ const Investor = require("../models/Expert");
 const fs = require('fs');
 
 // ✅ Pitch Submission by Startup
+// controllers/pitchController.js
 exports.uploadPitch = async (req, res) => {
-  const { companyName, problemStatement, solutionStatement, teamIntroduction, founderLinkedin } = req.body;
-  const pitchDeckUrl = req.file?.path;
+  const { 
+    companyName,  
+    email,
+    industry,     
+    website,       
+    stage,         
+    usp,          
+    fundingRequired,
+    currentRevenue
+  } = req.body;
+
+  const pitchDeckUrl = req.file?.path;  
 
   try {
     const pitch = await Pitch.create({
-      userId: req.user.id,
+      userId: req.user.id,  
       companyName,
-      problemStatement,
-      solutionStatement,
-      teamIntroduction,
-      founderLinkedin,
+      email,
+      industry,
+      website,
+      stage,
+      usp,
+      fundingRequired,
+      currentRevenue,
       pitchDeckUrl
     });
 
     res.status(201).json({ success: true, pitch });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Pitch submission failed", err });
+    res.status(500).json({ 
+      success: false, 
+      message: "Pitch submission failed", 
+      error: err.message 
+    });
   }
 };
 
